@@ -190,6 +190,14 @@ base_name = "$(output_name)-ref$(reftrace)-poe$(poe)"
                     end
 
                     data2 = [(data[2*i-1] + data[2*i]) / 2 for i in 1:Int64(length(data) / 2)]
+                    let y_check = y + 1
+                        @info "Check solar"
+                        @warn "$(y_check)"
+                        # @info "Solar trace [$(st), $(y_check), $(sc)]" max_MW=round(maximum(data2), digits=1) capacity_factor=(instcap > 0 ? round(sum(data2) / (length(data2) * instcap), digits=3) : NaN)
+                        let _tc = TECH_CAP[(TECH_CAP[!,:Scenario].==sc).&(TECH_CAP[!,:Subregion].==st).&(TECH_CAP[!,:Technology].==tch_).&(Dates.year.(TECH_CAP[!,:date]).==y_check), 7]
+                            @info "  ↳ capacity check [$(st), $(y_check), $(sc)]" max_MW=round(maximum(data2), digits=1) tech_cap_MW=(isempty(_tc) ? NaN : round(Float64(_tc[1]), digits=1)) diff_MW=(isempty(_tc) ? NaN : round(Float64(_tc[1]) - maximum(data2), digits=1))
+                        end
+                    end
                     for h in 1:Int64(Dates.Hour(dend - dstart) / Dates.Hour(1) + 1)
                         pmaxid += 1
                         push!(tv.gen_pmax, [pmaxid, genid[st][1], scid, dstart + Dates.Hour(h-1), data2[h]])
@@ -359,8 +367,14 @@ base_name = "$(output_name)-ref$(reftrace)-poe$(poe)"
                         dataN = naux == 0 ? datanew : datanew / naux * 0.0
                         data  = (dataexi .+ datarez) .+ dataN
                     end
-
+                    @info "Check wind"
                     data2 = [(data[2*i-1] + data[2*i]) / 2 for i in 1:Int64(length(data) / 2)]
+                    @info "Wind trace [$(st), $(y), $(sc)]" max_MW=round(maximum(data2), digits=1) capacity_factor=(instcap > 0 ? round(sum(data2) / (length(data2) * instcap), digits=3) : NaN)
+                    let y_check = y + 1
+                        let _tc = TECH_CAP[(TECH_CAP[!,:Scenario].==sc).&(TECH_CAP[!,:Subregion].==st).&(TECH_CAP[!,:Technology].==tch_).&(Dates.year.(TECH_CAP[!,:date]).==y_check), 7]
+                            @info "  ↳ capacity check [$(st), $(y_check), $(sc)]" max_MW=round(maximum(data2), digits=1) tech_cap_MW=(isempty(_tc) ? NaN : round(Float64(_tc[1]), digits=1)) diff_MW=(isempty(_tc) ? NaN : round(Float64(_tc[1]) - maximum(data2), digits=1))
+                        end
+                    end
                     for h in 1:Int64(Dates.Hour(dend - dstart) / Dates.Hour(1) + 1)
                         pmaxid += 1
                         push!(tv.gen_pmax, [pmaxid, genid[st][1], scid, dstart + Dates.Hour(h-1), data2[h]])
@@ -377,16 +391,16 @@ base_name = "$(output_name)-ref$(reftrace)-poe$(poe)"
     PISP.der_pred_sched(ts, tv, data_paths.ispdata24)
     PISP.ev_der_sched(tc, ts, tv, data_paths.ispdata24, data_paths.iasr23_ev_workbook)
 
-    PISP.write_time_data(ts, tv;
-        csv_static_path    = "$(base_name)/csv",
-        csv_varying_path   = "$(base_name)/csv/schedule-$(year)",
-        arrow_static_path  = "$(base_name)/arrow",
-        arrow_varying_path = "$(base_name)/arrow/schedule-$(year)",
-        write_static       = true,
-        write_varying      = true,
-        output_root        = output_root,
-        write_csv          = write_csv,
-        write_arrow        = write_arrow,
-    )
+    # PISP.write_time_data(ts, tv;
+    #     csv_static_path    = "$(base_name)/csv",
+    #     csv_varying_path   = "$(base_name)/csv/schedule-$(year)",
+    #     arrow_static_path  = "$(base_name)/arrow",
+    #     arrow_varying_path = "$(base_name)/arrow/schedule-$(year)",
+    #     write_static       = true,
+    #     write_varying      = true,
+    #     output_root        = output_root,
+    #     write_csv          = write_csv,
+    #     write_arrow        = write_arrow,
+    # )
 
 # end   # for year in years
