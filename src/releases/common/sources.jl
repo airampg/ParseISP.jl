@@ -8,6 +8,7 @@ source_target_keys(::ISP2024) = (
 
 source_target_keys(::ISP2026) = (
     :isp26_inputs,
+    :isp26_ev_support,
     :isp26_outlook,
     :isp26_model,
     :isp26_solar_traces,
@@ -43,6 +44,7 @@ function download_source_files(::ISP2026, downloadpath::AbstractString = ISPdata
     )
     automatic_targets = source_targets(ISP2026())
     downloaded_paths = download_targets_fn(automatic_targets; options = files_options)
+    downloaded_by_key = Dict(key => path for (key, path) in zip(source_target_keys(ISP2026()), downloaded_paths))
     release_paths = default_data_paths(ISP2026(), downloadpath)
     legacy_paths = legacy_data_paths(ISP2026(), release_paths)
 
@@ -51,11 +53,12 @@ function download_source_files(::ISP2026, downloadpath::AbstractString = ISPdata
         release_paths = release_paths,
         legacy_paths = legacy_paths,
         downloaded = (
-            ispdata26 = downloaded_paths[1],
-            outlook_generation_storage = downloaded_paths[2],
-            ispmodel_zip = downloaded_paths[3],
-            solar_traces_zip = downloaded_paths[4],
-            wind_traces_zip = downloaded_paths[5],
+            ispdata26 = downloaded_by_key[:isp26_inputs],
+            ev_inputs_workbook = downloaded_by_key[:isp26_ev_support],
+            outlook_generation_storage = downloaded_by_key[:isp26_outlook],
+            ispmodel_zip = downloaded_by_key[:isp26_model],
+            solar_traces_zip = downloaded_by_key[:isp26_solar_traces],
+            wind_traces_zip = downloaded_by_key[:isp26_wind_traces],
         ),
         targets = (automatic = source_target_keys(ISP2026()),),
         outlook = isfile(release_paths.outlook_generation_storage_zip) ?

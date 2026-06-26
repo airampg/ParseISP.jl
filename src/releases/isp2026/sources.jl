@@ -4,6 +4,11 @@ const ISP2026_FILE_TARGETS = ISPFileTarget[
                   "https://www.aemo.com.au/-/media/files/major-publications/isp/2026/supporting-materials/2026-isp-inputs-and-assumptions-workbook.xlsm?rev=de6f5853cd5e4d5cbb06bc90bdf0e378&sc_lang=en";
                   filename = "2026-isp-inputs-and-assumptions-workbook.xlsm",
                   subdir = ""),
+    ISPFileTarget(:isp26_ev_support,
+                  "2025 IASR EV workbook referenced by the final 2026 ISP workbook",
+                  "https://aemo.com.au/-/media/files/stakeholder_consultation/consultations/nem-consultations/2024/2025-iasr-scenarios/final-docs/AEMO-2025-IASR-EV-workbook";
+                  filename = "aemo-2025-iasr-ev-workbook.xlsx",
+                  subdir = ""),
     ISPFileTarget(:isp26_outlook,
                   "2026 ISP generation and storage outlook",
                   "https://www.aemo.com.au/-/media/files/major-publications/isp/2026/supporting-materials/2026-isp-generation-and-storage-outlook.zip?rev=b64eda28a46b4d3eb3e4b3cbafea3f84&sc_lang=en";
@@ -38,7 +43,7 @@ const ISP2026_SOURCE_METADATA = [
      title = "2025 IASR EV workbook referenced by the final 2026 ISP workbook",
      url = "https://aemo.com.au/-/media/files/stakeholder_consultation/consultations/nem-consultations/2024/2025-iasr-scenarios/final-docs/AEMO-2025-IASR-EV-workbook",
      filename = "aemo-2025-iasr-ev-workbook.xlsx",
-     status = :required_local,
+     status = :downloadable,
      local_path = "aemo-2025-iasr-ev-workbook.xlsx",
      note = "Required EV profile and charge-type support source referenced from the final 2026 ISP Inputs and Assumptions workbook."),
     (key = :isp26_outlook,

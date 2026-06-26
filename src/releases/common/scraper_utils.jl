@@ -39,7 +39,7 @@ module ParseISPScrapperUtils
         print(io,
             "Download blocked for $(err.url) (HTTP $(err.status)): $(err.reason). ",
             "AEMO may require an interactive browser session for this file; ",
-            "download it from the official 2026 ISP page and place it at the path printed by the downloader."
+            "download it from the official AEMO page and place it at the path printed by the downloader."
         )
     end
 

@@ -17,11 +17,11 @@ Compatibility wrappers remain available:
 - `build_ISP26_datasets(; kwargs...)` calls `build_datasets(ISP2026(); kwargs...)`.
 
 ## ISP2026 note
-Final 2026 acquisition is exposed through `ParseISP.download_isp26_source_files(downloadpath; kwargs...)`. It downloads only final 2026 ISP artefacts published by AEMO on 25 June 2026: the Inputs and Assumptions workbook, generation/storage outlook, ISP model, and solar/wind trace archives.
+Final 2026 acquisition is exposed through `ParseISP.download_isp26_source_files(downloadpath; kwargs...)`. It downloads the final 2026 ISP artefacts published by AEMO on 25 June 2026: the Inputs and Assumptions workbook, generation/storage outlook, ISP model, and solar/wind trace archives. It also downloads the AEMO 2025 IASR EV workbook referenced by the final 2026 ISP Inputs and Assumptions workbook.
 
 Final 2026 dataset construction is exposed through `ParseISP.build_datasets(ParseISP.ISP2026(); ...)`. Preliminary 2026 artefacts are intentionally not valid inputs for this path.
 
-EV schedule construction also requires the AEMO 2025 IASR EV workbook referenced by the final 2026 ISP Inputs and Assumptions workbook. Place it in `downloadpath` as `aemo-2025-iasr-ev-workbook.xlsx`; `build_datasets(ParseISP.ISP2026(); ...)` validates that it is present before parsing. This EV workbook is the only required local support file that is not downloaded by `download_isp26_source_files`.
+EV schedule construction requires the AEMO 2025 IASR EV workbook because the final 2026 ISP `Battery & Plug-in EVs` sheet points to that workbook for more detailed EV assumptions. The downloader saves it in `downloadpath` as `aemo-2025-iasr-ev-workbook.xlsx`; `build_datasets(ParseISP.ISP2026(); ...)` validates that it is present before parsing. If AEMO blocks programmatic download access, download that workbook in a browser from the official AEMO link and place it at the same path.
 
 For ISP2026, `years = [Y]` means the financial year from `Y-07-01` through `Y+1-06-30`. The supported range is `2026:2050`, which maps to FY2026-27 through FY2050-51. `years = [2025]` is rejected because FY2025-26 requires `2025-07-01` through `2026-06-30`, and the final ISP2026 demand, rooftop PV, VRE, and hydro trace sources begin on `2026-07-01`. `years = [2051]` is also rejected because the required trace sources end on `2051-06-30`.
 
@@ -305,4 +305,4 @@ Below, an overview of each of the databases the parser produces is given.
 > - 2026 Integrated System Plan **Model**
 > - 2026 Integrated System Plan **solar trace archive**
 > - 2026 Integrated System Plan **wind trace archive**
-> - 2025 IASR **EV workbook**, required as local support data because it is referenced by the final 2026 ISP workbook
+> - 2025 IASR **EV workbook**, required support data because it is referenced by the final 2026 ISP workbook
